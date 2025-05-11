@@ -10,7 +10,7 @@ public class JdbcTrainingRepository implements TrainingRepository {
     public List<Training> selectAll() {
         System.out.println("データベースからデータを取得します");
         // データベースから取得している想定
-        List<Training> trainings = new ArrayList<>();
+        List<Training> trainings = new ArrayList<>();//データベースからデータを取得する。取得したデータはTrainingクラスのオブジェクトとして保管する。
         for (int i = 0; i < 10; i++) {
             Training training = new Training();
             training.setTitle("title_" + i);

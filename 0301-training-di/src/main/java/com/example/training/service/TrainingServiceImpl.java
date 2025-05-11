@@ -5,7 +5,7 @@ import java.util.List;
 import com.example.training.entity.Training;
 import com.example.training.repository.TrainingRepository;
 
-public class TrainingServiceImpl implements TrainingService {
+public class TrainingServiceImpl implements TrainingService {//Ropositoryオブジェクトが取得したデータを処理するServiceクラス。
 
     private final TrainingRepository trainingRepository;
 
@@ -14,7 +14,7 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
-    public List<Training> findAll() {
+    public List<Training> findAll() {//具体的な業務ロジック。ここではただRepositoryが取得したデータをそのままControllerに返しているだけ。
         return trainingRepository.selectAll();
     }
 
