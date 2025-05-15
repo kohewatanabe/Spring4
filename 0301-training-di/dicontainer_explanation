@@ -1,0 +1,17 @@
+Java Webアプリケーションのビルドから実行までの詳細な流れ
+
+
+展開された後
+webサーバーはweb.xmlファイルを読み込む。
+web.xmlの中には、ContextLoaderListenerというリスナー（特定のイベント発生時に処理を行うクラス）が設定されている。
+webサーバーはこのContextLoaderListenerのインスタンスを生成し、そのcontextInitializedメソッドなどを呼び出して初期化を行う。
+ContextLoaderListenerは、Webアプリケーション全体のSpring設定を読み込み、アプリケーションの「心臓部」とも言えるメインのDIコンテナ（ルート WebApplicationContext）を作成・初期化する
+
+
+ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+contextInitializedメソッドなどを呼び出して初期化を行う。
+このタイミングでリスナーが起動するということですか？
+
+
+
+
