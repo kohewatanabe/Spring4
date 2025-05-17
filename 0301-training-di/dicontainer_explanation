@@ -1,17 +1,34 @@
-Java Webアプリケーションのビルドから実行までの詳細な流れ
+Webアプリケーションの初期化プロセス(初期化とは利用可能にすること)の詳細
 
+webサーバーは新たなWARファイルが配置されると、その読み込みを始め、展開する。展開した後、そのwebアプリケーションを実際に動かすために初期化を行う。
+その初期化を行うために読み込むファイルがWARファイルの中にあるweb.xmlファイル。
 
-展開された後
-webサーバーはweb.xmlファイルを読み込む。
-web.xmlの中には、ContextLoaderListenerというリスナー（特定のイベント発生時に処理を行うクラス）が設定されている。
-webサーバーはこのContextLoaderListenerのインスタンスを生成し、そのcontextInitializedメソッドなどを呼び出して初期化を行う。
-ContextLoaderListenerは、Webアプリケーション全体のSpring設定を読み込み、アプリケーションの「心臓部」とも言えるメインのDIコンテナ（ルート WebApplicationContext）を作成・初期化する
+1.ビジネスロジック層(Service, Repository)の初期化
+webアプリケーションの初期化プロセスは大きく2つあり、1つ目はビジネスロジック層の初期化。2つ目はWeb層(Webリクエストを処理する層)の初期化である。
+web.xmlには、Spring Frameworkが提供するContextLoaderListenerというリスナー（特定のイベント発生時に処理を行うクラス）が設定されていて、
+このContextLoaderListenerを起点としてビジネスロジック層の初期化を行う。
+まず、ContextLoaderListenerのインスタンスを生成し、そのcontextInitializedメソッドなどを呼び出して初期化を行う。
+ContextLoaderListenerは、Webアプリケーション全体のSpring設定を読み込み、メインのDIコンテナ(Root ApplicationContext)を作成する役割を担う。
+ContextLoaderListenerが起動されると、Springの設定ファイルを読み込み、設定ファイルで指定されたパッケージのコンポーネントスキャン（@Service、@Repository、@Component、
+@Configurationなどのアノテーションが付いたクラスを探すこと）を開始する。また同時に、Root ApplicationContext のインスタンス生成を行う。
+スキャンによって発見されたクラスの.classファイルがJVMによってメモリに読み込まれ（ロードされ)る。
+Root ApplicationContextインスタンスが、JVMによってロードされた.classファイルのアノテーションや設定ファイルの内容を解析し、
+ServiceやRepositoryを含む、アプリケーションのビジネスロジック層のBean（部品）の定義を構築する。
+そして、これらのBean定義に基づいて、Root ApplicationContextは実際にServiceクラスやRepositoryクラスなどのインスタンスを生成(ビジネスロジック層の構築)し、適切な依存性の注入を行う
+(ServiceクラスやRepositoryクラスはBean)。
 
-
-ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
-contextInitializedメソッドなどを呼び出して初期化を行う。
-このタイミングでリスナーが起動するということですか？
-
+2.Web層(サーブレット, Controller)の初期化
+初期化プロセスの中のビジネスロジック層の初期化が終わると、次にWeb層(サーブレット, Controller)の初期化を行う。
+web.xmlには、Spring MVCが提供するDispatcherServletというサーブレットが設定されている。
+Webサーバーは、web.xmlの設定に従って、DispatcherServletのインスタンスを生成し、初期化する。
+DispatcherServletが起動されると、Springの設定ファイルを読み込み、設定ファイルで指定されたパッケージのコンポーネントスキャン（@Controller、@RequestMappingなどの
+Web層に関するアノテーションを主に探します）を行う。
+DispatcherServletはさらに、自身のDIコンテナ(ビジネスロジック層のDIコンテナとは異なる)であるServlet ApplicationContextのインスタンスを作成する。
+スキャンによって発見されたクラスの.classファイルがJVMによってメモリに読み込まれ（ロードされ)る。
+Servlet ApplicationContextがJVMによってロードされた.classファイルのアノテーションや設定ファイルの内容を解析し、ControllerなどのアプリケーションのWeb層のBean(部品)の定義を構築する。
+そして、これらのBean定義に基づいて、Servlet ApplicationContextは実際にControllerクラスなどのインスタンスを生成(Web層の構築)し、適切な依存性の注入を行う(ControllerクラスはBean)。
+なお、DispatcherServletは主にリクエストの受け付けとそのリクエストのアプリケーションへの振り分け（フロントコントローラー機能）を行い、Servlet ApplicationContextは、
+そのリクエストに対して処理を行うビジネスロジックの入口である、Controllerの管理や、ControllerとServiceの紐づけ(依存性の注入)、すなわちビジネスロジック層との紐づけを行う。
 
 
 
