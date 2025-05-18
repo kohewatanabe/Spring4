@@ -1,10 +1,13 @@
 package com.example.shopping.repository;
 
+import org.springframework.stereotype.Repository;
+
 import com.example.shopping.entity.Product;
 
+@Repository
 public class JdbcProductRepository implements ProductRepository {
     @Override
-    public Product selectById(String id) {
+    public Product selectById(String id) {//本来であれば、商品データに関するデータベースとの間のやりとりが記述される。
         if ("p01".equals(id)) {
             Product product = new Product();
             product.setId("p01");

@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.example.shopping.entity.Order;
 import com.example.shopping.entity.OrderItem;
 import com.example.shopping.entity.Product;
@@ -16,11 +19,13 @@ import com.example.shopping.repository.OrderItemRepository;
 import com.example.shopping.repository.OrderRepository;
 import com.example.shopping.repository.ProductRepository;
 
+@Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
 
+    @Autowired//DIコンテナが各Bean間にどのように依存性を注入すればよいかどうか判断するための目印。
     public OrderServiceImpl(OrderRepository orderRepository, OrderItemRepository orderItemRepository, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
@@ -46,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
         int billingAmount = calculateTax(totalAmount);
         order.setBillingAmount(billingAmount);
         // 注文データをデータベースに挿入
-        orderRepository.insert(order);
+        orderRepository.insert(order);//注文データに関する処理を行うためにデータベースにアクセスするRepositoryを呼び出す。
         List<OrderItem> orderItems = new ArrayList<>();
         // カートの中の商品の数だけ繰り返す
         for (CartItemInput cartItem : cartInput.getCartItemInputs()) {
@@ -60,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
             // 在庫数を更新
             product.setStock(afterStock);
             // データベースの商品データを更新
-            productRepository.update(product);
+            productRepository.update(product);//商品データに関する処理を行うためにデータベースにアクセスするRepositoryを呼び出す。
             // Repositoryに渡す注文明細オブジェクトを生成。数量などを格納
             OrderItem orderItem = new OrderItem();
             orderItem.setId(UUID.randomUUID().toString());
@@ -69,7 +74,7 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setPriceAtOrder(cartItem.getProductPrice());
             orderItem.setQuantity(cartItem.getQuantity());
             // 注文明細データをデータベースに挿入
-            orderItemRepository.insert(orderItem);
+            orderItemRepository.insert(orderItem);//注文明細データに関する処理を行うためにデータベースにアクセスするRepositoryを呼び出す。
             orderItems.add(orderItem);
         }
         order.setOrderItems(orderItems);

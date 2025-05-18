@@ -12,7 +12,7 @@ ContextLoaderListenerは、Webアプリケーション全体のSpring設定を�
 ContextLoaderListenerが起動されると、Springの設定ファイルを読み込み、設定ファイルで指定されたパッケージのコンポーネントスキャン（@Service、@Repository、@Component、
 @Configurationなどのアノテーションが付いたクラスを探すこと）を開始する。また同時に、Root ApplicationContext のインスタンス生成を行う。
 スキャンによって発見されたクラスの.classファイルがJVMによってメモリに読み込まれ（ロードされ)る。
-Root ApplicationContextインスタンスが、JVMによってロードされた.classファイルのアノテーションや設定ファイルの内容を解析し、
+Root ApplicationContextインスタンスが、JVMによってロードされた.classファイルのアノテーションや設定ファイル(JavaConfigクラス)の内容を解析し、
 ServiceやRepositoryを含む、アプリケーションのビジネスロジック層のBean（部品）の定義を構築する。
 そして、これらのBean定義に基づいて、Root ApplicationContextは実際にServiceクラスやRepositoryクラスなどのインスタンスを生成(ビジネスロジック層の構築)し、適切な依存性の注入を行う
 (ServiceクラスやRepositoryクラスはBean)。
