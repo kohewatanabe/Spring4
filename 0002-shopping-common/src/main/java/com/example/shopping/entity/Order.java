@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.example.shopping.enumeration.PaymentMethod;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial")//注文テーブルに対応したentity。注文者の情報。
 public class Order implements Serializable {
     private String id;
     private List<OrderItem> orderItems;

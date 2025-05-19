@@ -4,7 +4,7 @@ package com.example.shopping.entity;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class OrderItem implements Serializable {
+public class OrderItem implements Serializable {//注文明細(注文内容)についてのentity。
     private String id;
     private String orderId;
     private String productId;

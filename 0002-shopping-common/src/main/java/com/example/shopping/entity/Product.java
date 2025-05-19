@@ -3,7 +3,7 @@ package com.example.shopping.entity;
 
 import java.io.Serializable;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial")//商品データに関するentity。
 public class Product implements Serializable {
     private String id;
     private String name;
