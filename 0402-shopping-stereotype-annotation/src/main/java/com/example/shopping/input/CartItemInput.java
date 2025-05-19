@@ -4,7 +4,7 @@ package com.example.shopping.input;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class CartItemInput implements Serializable {
+public class CartItemInput implements Serializable {//ユーザーが入力した注文商品情報を保持するInput。
     private String id;
     private String productId;
     private String productName;

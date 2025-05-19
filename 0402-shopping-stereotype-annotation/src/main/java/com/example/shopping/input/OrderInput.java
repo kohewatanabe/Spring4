@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.example.shopping.enumeration.PaymentMethod;
 
 @SuppressWarnings("serial")
-public class OrderInput implements Serializable {
+public class OrderInput implements Serializable {//ユーザーが入力した注文情報を保持するInput。
     private String name;
     private String address;
     private String phone;
