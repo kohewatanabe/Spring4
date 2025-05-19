@@ -3,6 +3,8 @@ package com.example.shopping.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.shopping.input.CartInput;
+import com.example.shopping.input.OrderInput;
 import com.example.shopping.repository.OrderItemRepository;
 import com.example.shopping.repository.OrderRepository;
 import com.example.shopping.repository.ProductRepository;
@@ -18,5 +20,10 @@ public class OrderServiceImpl implements OrderService {
 		this.orderRepository = orderRepository;
 		this.orderItemRepository = orderItemRepository;
 		this.productRepository = productRepository;
+	}
+	
+	@Override
+	public Order placeOrder(OrderInput order, CartInput cartInput) {
+		Order order = new Order();
 	}
 }
