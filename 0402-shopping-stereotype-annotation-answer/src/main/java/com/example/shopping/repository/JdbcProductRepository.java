@@ -1,5 +1,26 @@
 package com.example.shopping.repository;
 
-public class JdbcProductRepository {
+import com.example.shopping.entity.Product;
 
+//引き続きEntityやInputの理解を深めつつ、例外も少し復習していく。今、Seriviceから
+//呼び出されるProductに関するRepositoryの処理を書いている最中で、その続きから取り組む。
+
+public class JdbcProductRepository implements ProductRepository {
+	@Override
+	public Product selectById(String id) {
+		if ("p01".equals(id)) {
+			Product product = new Product();
+			product.setId("p01");
+			product.setStock(10);
+			return product;
+		}
+		if ("p02".equals(id)) {
+			Product product = new Product();
+			product.setId("p02");
+			product.setStock(20);
+			return product;
+		}
+		throw new IllegalArgumentException("引数が不正");
+	}
+	
 }

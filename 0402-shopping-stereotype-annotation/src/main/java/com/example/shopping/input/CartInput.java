@@ -3,7 +3,7 @@ package com.example.shopping.input;
 import java.io.Serializable;
 import java.util.List;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial")//ユーザーが入力した注文商品情報とその合計額などを保持するInput。
 public class CartInput implements Serializable {
     private Integer totalAmount;
     private Integer billingAmount;

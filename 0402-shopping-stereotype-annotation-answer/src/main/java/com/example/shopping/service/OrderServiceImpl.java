@@ -1,13 +1,19 @@
 package com.example.shopping.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.shopping.entity.Order;
+import com.example.shopping.entity.OrderItem;
+import com.example.shopping.entity.Product;
+import com.example.shopping.exception.StockShortageException;
 import com.example.shopping.input.CartInput;
+import com.example.shopping.input.CartItemInput;
 import com.example.shopping.input.OrderInput;
 import com.example.shopping.repository.OrderItemRepository;
 import com.example.shopping.repository.OrderRepository;
@@ -38,7 +44,38 @@ public class OrderServiceImpl implements OrderService {
 		order.setCustomerPhone(orderInput.getEmailAddress());
 		order.setOrderDateTime(LocalDateTime.now());
 		order.setPaymentMethod(orderInput.getPaymentMethod());
+		//合計額（税抜）を計算
+		int totalAmount = calculateTotalAmount(cartInput.getCartItemInputs());
+		//請求額(税込)を計算
+		int billingAmount = calculateTax(totalAmount);
+		order.setBillingAmount(billingAmount);
+		//注文データをデータベースに格納
+		orderRepository.insert(order);
+		List<OrderItem> orderItems = new ArrayList<>();
+		//カートの中の商品の数だけ繰り返す(カートの中の商品データだけを取り出す)
+		for (CartItemInput cartItem : cartInput.getCartItemInputs()) {
+			//商品データをデータベースから取得
+			Product product = productRepository.selectById(cartItem.getProductId());
+			int afterSrock = product.getStock() - cartItem.getQuantity();
+			
+			if (afterStock < 0) {
+				throw new StockShortageException("在庫が足りません");
+			}
+			//商品在庫数を更新
+			product.setStock(afterStock);
+			
+		}
+	}
 		
-		
+	private int calculateTotalAmount(List<CartItemInput> cartItems) {
+		int totalAmount = 0;
+		for (CartItemInput cartItem : cartItems) {
+			totalAmount += (cartItem.getProductPrice() * cartItem.getQuantity());
+		}
+		return totalAmount;
+	}
+	
+	private int calculateTax(int price) {
+		return (int)(price * 1.1);
 	}
 }
