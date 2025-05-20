@@ -1,5 +1,5 @@
 package com.example.shopping.service;
-
+//Orderが注文した人の名前やメアドなどで、OrderItemがその注文に紐づいた、実際に注文した内容で、Productがデータベースに格納されている各商品の情報(在庫状況など)
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Order placeOrder(OrderInput orderInput, CartInput cartInput) {
 		//Repositoryに渡す注文オブジェクトを生成
-		Order order = new Order();
+		Order order = new Order();//InputからEntityを作成する(新しいデータを作成して登録するシナリオ)。
 		// IDはUUID(Universally Unique Identifier。ランダムなIDを生成する際に用いられる標準的な仕組み)を使用
 		order.setId(UUID.randomUUID().toString());
 		//引数で渡された注文情報(OrderInput)の情報をOrderオブジェクトに格納
@@ -55,15 +55,18 @@ public class OrderServiceImpl implements OrderService {
 		//カートの中の商品の数だけ繰り返す(カートの中の商品データだけを取り出す)
 		for (CartItemInput cartItem : cartInput.getCartItemInputs()) {
 			//商品データをデータベースから取得
-			Product product = productRepository.selectById(cartItem.getProductId());
-			int afterSrock = product.getStock() - cartItem.getQuantity();
-			
+			Product product = productRepository.selectById(cartItem.getProductId());//Repository層に依頼してデータベースから既存のEntityを読み込む(既存のデータを操作するシナリオ)。この場合RepositoryでEntityを作らないといけない。
+			int afterStock = product.getStock() - cartItem.getQuantity();
+			//在庫が足りない場合は例外をスローする
 			if (afterStock < 0) {
 				throw new StockShortageException("在庫が足りません");
 			}
 			//商品在庫数を更新
 			product.setStock(afterStock);
-			
+			//データベースの商品データを更新する。
+			productRepository.update(product);
+			//Repositoryに渡す注文明細オブジェクトを生成。
+			//ここから
 		}
 	}
 		

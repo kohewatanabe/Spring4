@@ -23,4 +23,13 @@ public class JdbcProductRepository implements ProductRepository {
 		throw new IllegalArgumentException("引数が不正");
 	}
 	
+	@Override
+	public boolean update(Product product) {
+		if (product == null) {
+			throw new IllegalArgumentException("引数が不正");
+		}
+		System.out.println("商品を更新しました。id=" + product.getId());
+		return true;
+	}
+	
 }
