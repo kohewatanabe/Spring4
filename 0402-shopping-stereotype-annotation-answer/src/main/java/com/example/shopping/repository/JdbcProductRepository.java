@@ -1,10 +1,12 @@
 package com.example.shopping.repository;
 
+import org.springframework.stereotype.Repository;
+
 import com.example.shopping.entity.Product;
 
 //引き続きEntityやInputの理解を深めつつ、例外も少し復習していく。今、Seriviceから
 //呼び出されるProductに関するRepositoryの処理を書いている最中で、その続きから取り組む。
-
+@Repository
 public class JdbcProductRepository implements ProductRepository {
 	@Override
 	public Product selectById(String id) {

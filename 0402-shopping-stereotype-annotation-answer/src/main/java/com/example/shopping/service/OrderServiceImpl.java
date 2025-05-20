@@ -34,7 +34,7 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Override
 	public Order placeOrder(OrderInput orderInput, CartInput cartInput) {
-		//Repositoryに渡す注文オブジェクトを生成
+		//Repositoryに渡す注文オブジェクトを生成(entityを生成)
 		Order order = new Order();//InputからEntityを作成する(新しいデータを作成して登録するシナリオ)。
 		// IDはUUID(Universally Unique Identifier。ランダムなIDを生成する際に用いられる標準的な仕組み)を使用
 		order.setId(UUID.randomUUID().toString());
@@ -66,9 +66,20 @@ public class OrderServiceImpl implements OrderService {
 			product.setStock(afterStock);
 			//データベースの商品データを更新する。
 			productRepository.update(product);
-			//Repositoryに渡す注文明細オブジェクトを生成。
-			//ここから
+			//Repositoryに渡す注文明細オブジェクトを生成(entityを生成)(1商品に対して1つ生成)。
+			OrderItem orderItem = new OrderItem();
+			orderItem.setId(UUID.randomUUID().toString());
+			orderItem.setOrderId(order.getId());
+			orderItem.setProductId(product.getId());
+			orderItem.setPriceAtOrder(cartItem.getProductPrice());
+			orderItem.setQuantity(cartItem.getQuantity());
+			//注文明細データをデータベースに挿入
+			orderItemRepository.insert(orderItem);
+			orderItems.add(orderItem);
 		}
+		order.setOrderItems(orderItems);
+		//業務ロジックで処理を加えたデータ(Inputとデータベースの既存のEntityを踏まえて処理を加えたデータ)をControllerに返す。
+		return order;
 	}
 		
 	private int calculateTotalAmount(List<CartItemInput> cartItems) {

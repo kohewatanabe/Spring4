@@ -78,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
             orderItems.add(orderItem);
         }
         order.setOrderItems(orderItems);
-        // 注文処理後のOrderオブジェクトを戻り値で返す
+        // 注文処理後のOrderオブジェクトを戻り値で返す。//業務ロジックで処理を加えたデータ(Inputとデータベースの既存のEntityを踏まえて処理を加えたデータ)をControllerに返す。
         return order;
     }
 
