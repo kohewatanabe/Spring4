@@ -51,7 +51,8 @@ public class OrderServiceImpl implements OrderService {
 		order.setBillingAmount(billingAmount);
 		//注文データをデータベースに格納
 		orderRepository.insert(order);
-		List<OrderItem> orderItems = new ArrayList<>();
+		List<OrderItem> orderItems = new ArrayList<>();//Repositoryでデータベースから引っ張ってきたEntityやControllerから渡されたInputの情報を使って
+		//業務ロジック(処理)を行う。
 		//カートの中の商品の数だけ繰り返す(カートの中の商品データだけを取り出す)
 		for (CartItemInput cartItem : cartInput.getCartItemInputs()) {
 			//商品データをデータベースから取得
