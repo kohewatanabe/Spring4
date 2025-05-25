@@ -1,12 +1,18 @@
 package com.example.shopping;
-
+//datasourceの挙動理解し、このプロジェクトのフルスクラッチをする。
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import com.example.shopping.entity.Order;
 import com.example.shopping.enumeration.PaymentMethod;
@@ -19,6 +25,14 @@ import com.example.shopping.service.OrderService;
 @ComponentScan
 public class ShoppingApplication {
 
+    @Bean
+    public DataSource dataSource() {
+        EmbeddedDatabase dataSource = new EmbeddedDatabaseBuilder()
+                .addScripts("schema.sql", "data.sql")
+                .setType(EmbeddedDatabaseType.H2).build();
+        return dataSource;
+    }
+    
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(ShoppingApplication.class);
         OrderService orderService = context.getBean(OrderService.class);
