@@ -1,7 +1,5 @@
 package com.example.shopping.repository;
 
-import com.example.shopping.entity.Order;
+public class OrderRepository {
 
-public interface OrderRepository {
-    void insert(Order order);
 }
