@@ -10,7 +10,7 @@ import com.example.shopping.enumeration.PaymentMethod;
 @SuppressWarnings("serial")//注文テーブルに対応したentity。注文者の情報。
 public class Order implements Serializable {
     private String id;
-    private List<OrderItem> orderItems;
+    private List<OrderItem> orderItems;//関連するOrderItemをフィールドに保持(これがあることによってOrder側から関係するOrderItemを参照できる)。本来はOrderItemのOrderIdのみでいいが、双方向でアクセスできるようにしている。
     private LocalDateTime orderDateTime;
     private Integer billingAmount;
     private String customerName;

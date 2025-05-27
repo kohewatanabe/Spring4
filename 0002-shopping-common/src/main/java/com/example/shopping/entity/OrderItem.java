@@ -6,8 +6,8 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class OrderItem implements Serializable {//注文明細(注文内容)についてのentity。
     private String id;
-    private String orderId;
-    private String productId;
+    private String orderId;//Orderに対する外部キー(これがあることによって自分が属するOrderにアクセスできる)
+    private String productId;//Productに対する外部キー(これがあることによって自分が属するProductにアクセスできる)
     private Product product;
     private Integer priceAtOrder;
     private Integer quantity;
