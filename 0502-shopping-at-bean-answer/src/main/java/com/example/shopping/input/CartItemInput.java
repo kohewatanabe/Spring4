@@ -10,6 +10,22 @@ public class CartItemInput implements Serializable {
 	private Integer productPrice;
 	private Integer quantity;
 	
+	public String getId() {
+		return this.id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public String getProductId() {
+		return this.productId;
+	}
+	
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
+	
 	public String getProductName() {
 		return this.productName;
 	}
@@ -22,31 +38,15 @@ public class CartItemInput implements Serializable {
 		return this.productPrice;
 	}
 	
-	public void setProductPrict(Integer productPrice) {
+	public void setProductPrice(Integer productPrice) {
 		this.productPrice = productPrice;
-	}
-	
-	public String getProductId() {
-		return this.productId;
-	}
-	
-	public void setProductId(String productId) {
-		this.productId = productId;
-	}
-	
-	public String getId() {
-		return this.id;
-	}
-	
-	public void setId(String id) {
-		this.id = id;
 	}
 	
 	public Integer getQuantity() {
 		return this.quantity;
 	}
 	
-	public void setQuantiry(Integer quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 }

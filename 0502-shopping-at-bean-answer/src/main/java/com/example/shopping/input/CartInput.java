@@ -2,16 +2,16 @@ package com.example.shopping.input;
 
 import java.io.Serializable;
 import java.util.List;
-//import com.example.shopping.input.CartItemInput;
 
 @SuppressWarnings("serial")
 public class CartInput implements Serializable {
 	private Integer totalAmount;
 	private Integer billingAmount;
 	private List<CartItemInput> cartItemInputs;
-	
+	//このインプットの情報だけで、商品購入情報は表現できそうだが、なぜCartItemInputを送るのか。
+	//AIの回答だとあまりCartItemInputを単体で送る意味はなさそう。
 	public Integer getTotalAmount() {
-		return totalAmount;
+		return this.totalAmount;
 	}
 	
 	public void setTotalAmount(Integer totalAmount) {
@@ -26,11 +26,11 @@ public class CartInput implements Serializable {
 		this.billingAmount = billingAmount;
 	}
 	
-	public List<CartItemInput> getCartItemInput() {
+	public List<CartItemInput> getCartItemInputs() {
 		return this.cartItemInputs;
 	}
 	
-	public void setCartItemInput(List<CartItemInput> cartItemInput) {
-		this.cartItemInputs = cartItemInput;
+	public void setCartItemInputs(List<CartItemInput> cartItemInputs) {
+		this.cartItemInputs = cartItemInputs;
 	}
 }
