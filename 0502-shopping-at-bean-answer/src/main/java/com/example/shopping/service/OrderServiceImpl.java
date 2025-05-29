@@ -1,12 +1,18 @@
 package com.example.shopping.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.shopping.entity.Order;
+import com.example.shopping.entity.OrderItem;
+import com.example.shopping.entity.Product;
+import com.example.shopping.exception.StockShortageException;
 import com.example.shopping.input.CartInput;
+import com.example.shopping.input.CartItemInput;
 import com.example.shopping.input.OrderInput;
 import com.example.shopping.repository.OrderItemRepository;
 import com.example.shopping.repository.OrderRepository;
@@ -21,7 +27,6 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	public OrderServiceImpl(OrderRepository orderRepository, OrderItemRepository orderItemRepository, ProductRepository productRepository) {
-		
 	this.orderRepository = orderRepository;
 	this.orderItemRepository = orderItemRepository;
 	this.productRepository = productRepository;
@@ -31,8 +36,63 @@ public class OrderServiceImpl implements OrderService {
 	public Order placeOrder(OrderInput orderInput, CartInput cartInput) {
 		Order order = new Order();
 		
-		order.setId(UUID.random().toString());
+		order.setId(UUID.randomUUID().toString());
+		order.setCustomerName(orderInput.getName());
+		order.setCustomerAddress(orderInput.getAddress());
+		order.setCustomerPhone(orderInput.getPhone());
+		order.setCustomerEmailAddress(orderInput.getEmailAddress());
+		order.setPaymentMethod(orderInput.getPaymentMethod());
+		int totalAmount = calculateTotalAmount(cartInput.getCartItemInputs());
+		int billingAmount = calculateTax(totalAmount);
+		order.setBillingAmount(billingAmount);
+		
+		orderRepository.insert(order);
+		
+		
+		List<OrderItem> orderItems = new ArrayList<>();
+		for (CartItemInput cartItem : cartInput.getCartItemInputs()) {
+			Product product = productRepository.selectById(cartItem.getProductId());
+			int afterStock = product.getStock() - cartItem.getQuantity();
+			if (afterStock < 0) {
+				throw new StockShortageException("在庫が足りません");
+			}
+			product.setStock(afterStock);
+			
+			productRepository.update(product);
+			
+			
+			OrderItem orderItem = new OrderItem();
+			orderItem.setId(UUID.randomUUID().toString());
+			orderItem.setOrderId(order.getId());
+			orderItem.setProductId(product.getId());
+			orderItem.setPriceAtOrder(cartItem.getProductPrice());
+			orderItem.setQuantity(cartItem.getQuantity());
+			
+			orderItemRepository.insert(orderItem);
+			
+			orderItems.add(orderItem);
+		}
+		order.setOrderItems(orderItems);
+		
+		return order;
+	}
+		
+	
+	private int calculateTotalAmount(List<CartItemInput> cartItems) {
+		int totalAmount = 0;
+		for (CartItemInput cartItem : cartItems) {
+			totalAmount += (cartItem.getProductPrice() * cartItem.getQuantity());
+		}
+		return totalAmount;
+	}
+	
+	private int calculateTax(int price) {
+		return (int) (price * 1.1);
 	}
 }
+
+
+
+
 
 
