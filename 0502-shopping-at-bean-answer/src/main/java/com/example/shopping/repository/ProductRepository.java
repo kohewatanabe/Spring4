@@ -1,5 +1,8 @@
 package com.example.shopping.repository;
 
-public class ProductRepository {
+import com.example.shopping.entity.Product;
 
+public interface ProductRepository {
+	Product selectById(String id);
+	boolean update(Product product);
 }
