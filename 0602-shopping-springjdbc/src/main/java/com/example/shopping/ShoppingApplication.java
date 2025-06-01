@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.example.shopping.input.OrderInput;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -21,6 +20,7 @@ import com.example.shopping.entity.Order;
 import com.example.shopping.enumeration.PaymentMethod;
 import com.example.shopping.input.CartInput;
 import com.example.shopping.input.CartItemInput;
+import com.example.shopping.input.OrderInput;
 import com.example.shopping.service.OrderService;
 
 import ch.qos.logback.classic.Level;
@@ -37,12 +37,17 @@ public class ShoppingApplication {
                 .setType(EmbeddedDatabaseType.H2).build();
         return dataSource;
     }
+    
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+    	return new JdbcTemplate(dataSource);
+    }
 
     public static void main(String[] args) {
 
         ApplicationContext context = new AnnotationConfigApplicationContext(ShoppingApplication.class);
         // JdbcTemplateがSQLをログ出力してくれるように設定
-        ((Logger) LoggerFactory.getLogger(JdbcTemplate.class.getName())).setLevel(Level.DEBUG);
+        ((Logger) LoggerFactory.getLogger(JdbcTemplate.class.getName())).setLevel(Level.DEBUG);//「JdbcTemplate が出すログを、デバッグ用の最も詳しいレベルに設定して！」という指示
         OrderService orderService = context.getBean(OrderService.class);
 
         OrderInput orderInput = new OrderInput();

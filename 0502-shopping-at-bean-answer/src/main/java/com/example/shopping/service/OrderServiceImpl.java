@@ -1,5 +1,6 @@
 package com.example.shopping.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -41,6 +42,7 @@ public class OrderServiceImpl implements OrderService {
 		order.setCustomerAddress(orderInput.getAddress());
 		order.setCustomerPhone(orderInput.getPhone());
 		order.setCustomerEmailAddress(orderInput.getEmailAddress());
+		order.setOrderDateTime(LocalDateTime.now());
 		order.setPaymentMethod(orderInput.getPaymentMethod());
 		int totalAmount = calculateTotalAmount(cartInput.getCartItemInputs());
 		int billingAmount = calculateTax(totalAmount);
