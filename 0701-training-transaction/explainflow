@@ -1,0 +1,19 @@
+あなたのサービスメソッド
+↓
+(Proxyオブジェクトが介入)
+↓
+Proxyオブジェクト
+  -> 1. PlatformTransactionManager に「トランザクション開始」を指示
+  -> 2. PlatformTransactionManager が DataSource から Connection を取得
+  -> 3. PlatformTransactionManager が Connection をスレッドローカルにバインド
+  -> 4. Proxyオブジェクトが実際のサービスメソッドを実行
+     ↓
+     サービスメソッド内のデータベース操作 (例: `jdbcTemplate.update(...)`)
+       ↓
+       JdbcTemplate
+         -> (Springの内部ユーティリティ経由で) スレッドローカルにバインドされた Connection を検出・利用
+         -> 実際のDB操作を実行
+     ↑
+  -> 5. サービスメソッドが終了
+  -> 6. Proxyオブジェクトが PlatformTransactionManager に「コミット/ロールバック」を指示
+  -> 7. PlatformTransactionManager が Connection をスレッドローカルからアンバインドし、解放（プールに戻す）

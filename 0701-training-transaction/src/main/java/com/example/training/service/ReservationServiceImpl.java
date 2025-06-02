@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.training.entity.Reservation;
 import com.example.training.entity.StudentType;
@@ -14,6 +15,7 @@ import com.example.training.repository.ReservationRepository;
 import com.example.training.repository.StudentTypeRepository;
 import com.example.training.repository.TrainingRepository;
 
+@Transactional
 @Service
 public class ReservationServiceImpl implements  ReservationService {
 
