@@ -25,4 +25,5 @@ logging.level.org.springframework.jdbc.core.JdbcTemplate=DEBUG
 image::log-sample.png[]
 
 
-
+@EnableAutoConfiguration は、クラスパス上のすべてのJARファイル（特にspring-boot-autoconfigureや、他のStarter POMに含まれるJAR）内にある特別なファイルを探します。
+誰が探すのですか。
