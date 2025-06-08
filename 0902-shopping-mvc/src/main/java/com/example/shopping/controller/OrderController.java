@@ -3,10 +3,9 @@ package com.example.shopping.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.shopping.input.CartInput;
-import com.example.shopping.input.OrderInput;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.shopping.entity.Order;
 import com.example.shopping.enumeration.PaymentMethod;
+import com.example.shopping.input.CartInput;
 import com.example.shopping.input.CartItemInput;
+import com.example.shopping.input.OrderInput;
 import com.example.shopping.service.OrderService;
 
 @Controller
@@ -59,17 +60,23 @@ public class OrderController {
 
     @PostMapping("/validate-input")
     public String validateInput(
-        OrderInput orderInput, Model model) {
+        @Validated OrderInput orderInput,
+        BindingResult bindingResult,
+        Model model) {
+    	if (bindingResult.hasErrors()) {
+    		return "order/orderForm";
+    	}
         CartInput cartInput = dummyCartInput();
         model.addAttribute("cartInput", cartInput);
         return "order/orderConfirmation";
     }
 
-    @PostMapping(value = "/place-order")
+    @PostMapping(value = "/place-order", params = "change")
     public String correctInput(@Validated OrderInput orderInput, Model model) {
         return "order/orderForm";
     }
-
+    
+    @PostMapping(value = "/place-order", params = "commit")
     public String order(@Validated OrderInput orderInput, Model model) {
         CartInput cartInput = dummyCartInput();
         Order order = orderService
